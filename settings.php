@@ -9,8 +9,8 @@ date_default_timezone_set("Europe/Stockholm");
 setlocale(LC_NUMERIC, 'en_US.utf8');
 
 // Paths
-$repo_root = dirname(__FILE__);
-$path_view = $repo_root."/views";
+$repo_root = dirname(__FILE__).'/';
+$path_view = $repo_root."views/";
 
 // Other stuff
 $settings['app_name']="Synka RSS";

@@ -34,8 +34,8 @@ class Controller {
 		return $this->route($request);
 	}
 
-	public function httpheaders() {
-	}
+	public function http_headers() {}
+	public function html_head_extras() { return ''; }
 
 	public function title() {
 		return $this->title;
@@ -44,9 +44,22 @@ class Controller {
 		return $this->body;
 	}
 
-	public function output() {
-		$this->httpheaders();
+	public function raw_output() {
+		$this->http_headers();
 		return $this->body;
+	}
+
+	public function html_output() {
+		$this->http_headers();
+		$data['title'] = $this->title();
+		$data['head_extras'] = $this->html_head_extras();
+		echo $this->view("html_head.php", $data);
+		echo $this->body();
+		echo $this->view("html_footer.php", $data);
+	}
+
+	public function output() {
+		return $this->html_output();
 	}
 }
 
