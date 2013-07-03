@@ -3,7 +3,7 @@ class Controller {
 	protected $title, $body;
 
 	function view($view, $data=array()){
-		global $path_view, $this_user, $settings;
+		global $path_view, $this_user, $settings, $debug;
 		extract($data);
 		ob_start();
 		require($path_view.$view);
