@@ -1,3 +1,4 @@
+	</div>
 	<?php
 	if($debug) {
 		?><script src="/js/vendor/jquery-1.10.1.js"></script><?php

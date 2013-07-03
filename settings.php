@@ -13,10 +13,10 @@ $repo_root = dirname(__FILE__).'/';
 $path_view = $repo_root."views/";
 
 // Other stuff
-$settings['app_name']="Synka RSS";
+$settings['app_name']="Okänt projekt";
 
 // Database
 $settings['db_host']="127.0.0.1";
-$settings['db_user']="synkarss";
-$settings['db_password']="J7rGCSccZXrQXPcc";
-$settings['db_name']="synkarss";
+$settings['db_user']="user_not_set";
+$settings['db_password']="password_not_set";
+$settings['db_name']="dbname_not_set";
