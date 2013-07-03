@@ -1,0 +1,14 @@
+RewriteEngine On
+RewriteRule ^favicon.ico$ /gfx/favicon.ico
+
+RewriteCond %{REQUEST_URI} !^/js
+RewriteCond %{REQUEST_URI} !^/style
+RewriteCond %{REQUEST_URI} !^/gfx
+RewriteCond %{REQUEST_URI} !^/favicon.ico$
+RewriteCond %{REQUEST_URI} !^/index.php
+RewriteRule (.*) /index.php/$1
+
+php_flag magic_quotes_gpc Off
+
+AddDefaultCharset utf-8
+Options FollowSymLinks
