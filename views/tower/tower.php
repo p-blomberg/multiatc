@@ -35,10 +35,11 @@ function main() {
 
 	t.font = "bold 12px sans-serif";
 
-	runways();
+	draw_runways();
+	draw_aircraft();
 }
 
-function runways() {
+function draw_runways() {
 	t.fillStyle="#999";
 	t.strokeStyle="#999";
 	t.font = "normal 10px sans-serif";
@@ -79,6 +80,38 @@ function runways() {
 			(w * ".(($rw->begin_x - $airspace_begin_x) / $airspace_width)." +
 			(w * ".(($rw->end_x - $rw->begin_x) / $airspace_width).")) +10,
 			(h * ".((($rw->end_y - $airspace_begin_y) / $airspace_height) + (($rw->end_y - $rw->begin_y) / $airspace_height*0.2)).")+5);";
+	}
+	?>
+}
+
+function draw_aircraft() {
+	t.fillStyle="#FFF";
+	t.strokeStyle="#FFF";
+	t.font = "normal 10px sans-serif";
+
+	<?php
+	$airspace_begin_x = -88.2;
+	$airspace_begin_y = 42.1;
+	$airspace_end_x = -87.6;
+	$airspace_end_y = 41.8;
+	$airspace_width = $airspace_end_x - $airspace_begin_x;
+	$airspace_height = $airspace_end_y - $airspace_begin_y;
+
+	$b747 = new AircraftModel();
+	$aircraft = array(
+		new Aircraft("SAS123", $b747, array(-88.1, 41.969), 4000, 90, 180),
+		new Aircraft("BA345", $b747, array(-87.85, 41.984), 2000, 270, 160),
+	);
+	foreach($aircraft as $a) {
+		echo "t.fillRect(
+			(w * ".(($a->location[0] - $airspace_begin_x) / $airspace_width).")-2,
+			(h * ".(($a->location[1] - $airspace_begin_y) / $airspace_height).")-2,
+			5, 5);";
+		echo 't.textBaseline = "top";';
+		echo "t.fillText(
+			'".$a->flightno."',
+			(w * ".(($a->location[0] - $airspace_begin_x) / $airspace_width)."-t.measureText('".$a->flightno."').width/2),
+			(h * ".(($a->location[1] - $airspace_begin_y) / $airspace_height).")-20);";
 	}
 	?>
 }
