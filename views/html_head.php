@@ -7,12 +7,13 @@
 	<meta charset="utf-8">
 	<title><?=$title?></title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width">
 	<link rel="stylesheet" href="/css/normalize.min.css">
 	<link rel="stylesheet" href="/css/main.css">
 	<!--[if lt IE 9]>
 		<script src="/js/vendor/html5shiv.js"></script>
 	<![endif]-->
+	<?=$head_extras?>
+	<script type="text/javascript" src="/js/prototype.js"></script>
 </head> 
-<body>
+<body id="body">
 	<div id="wrapper">
