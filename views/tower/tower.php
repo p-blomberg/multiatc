@@ -40,50 +40,45 @@ function main() {
 
 function runways() {
 	t.fillStyle="#999";
-	t.font = "normal 12px sans-serif";
+	t.strokeStyle="#999";
+	t.font = "normal 10px sans-serif";
 	
 	<?php
 	$ord = new Airport(array(41.979492, -87.905597), 30*1852);
-	$ord->add_runway(new Runway("10", "093", array(-87.9315, 41.969), 3962));
+	$ord->add_runway(new Runway("10", "093", array(-87.9315, 41.969, -87.8837, 41.969), 13001));
+	$ord->add_runway(new Runway("14L", "143", array(-87.91533, 42.0025, -87.891667, 41.981333), 10005));
+	$ord->add_runway(new Runway("14R", "143", array(-87.933167, 41.9905, -87.910167, 41.97), 9685));
+	$ord->add_runway(new Runway("4R", "045", array(-87.8995, 41.953333, -87.879667, 41.97), 8075));
+	$ord->add_runway(new Runway("4L", "042", array(-87.914, 41.981667, -87.896333, 41.9975), 7500));
+	$ord->add_runway(new Runway("9R", "093", array(-87.918333, 41.983833, -87.889, 41.983833), 7967));
+	$ord->add_runway(new Runway("9L", "093", array(-87.926667, 42.002833, -87.899167, 42.002833), 7500));
 
-	$runway_length = array( // meters
-		"4L/22R" => 2286,
-		"4R/22L" => 2461,
-		"9L/27R" => 2286,
-		"9R/27L" => 2428,
-		"10L/28R" => 3962,
-		"14L/32R" => 3050,
-		"14R/32L" => 2952,
-	);
-
-	$airspace_begin_x = -89;
-	$airspace_begin_y = 42.5;
-	$airspace_end_x = -87;
-	$airspace_end_y = 41.5;
+	$airspace_begin_x = -88.2;
+	$airspace_begin_y = 42.1;
+	$airspace_end_x = -87.6;
+	$airspace_end_y = 41.8;
 	$airspace_width = $airspace_end_x - $airspace_begin_x;
 	$airspace_height = $airspace_end_y - $airspace_begin_y;
 
-	$runway_begin_x = -87.9315;
-	$runway_end_x = -87.884;
-	$runway_begin_y = 41.969;
-	$runway_end_y = 41.969;
-
 	foreach($ord->runways as $rw) {
-		echo 't.fillText("'.$runway_end_x.' - '.$rw->begin_x.' = '.($runway_end_x - $rw->begin_x).'", 20, 20);';
-		echo "t.fillRect( 
+		echo "t.beginPath();";
+		echo "t.moveTo(
 			w * ".(($rw->begin_x - $airspace_begin_x) / $airspace_width).",
-			h * ".(($runway_begin_y - $airspace_begin_y) / $airspace_height).",
-			w * ".(($runway_end_x - $rw->begin_x) / $airspace_width).",
-			2);";
+			h * ".(($rw->begin_y - $airspace_begin_y) / $airspace_height).");";
+		echo "t.lineTo(
+			w * ".(($rw->end_x - $airspace_begin_x) / $airspace_width).",
+			h * ".(($rw->end_y - $airspace_begin_y) / $airspace_height).");";
+		echo "t.stroke();";
+
 		echo "t.fillText(
 			'".$rw->forward_name."',
-			w * ".(($rw->begin_x - $airspace_begin_x) / $airspace_width)." -t.measureText(".$rw->forward_name.").width-10,
-			h * ".(($runway_begin_y - $airspace_begin_y) / $airspace_height)."+5);";
+			(w * ".(($rw->begin_x - $airspace_begin_x) / $airspace_width).") -t.measureText('".$rw->forward_name."').width-5,
+			h * ".((($rw->begin_y - $airspace_begin_y) / $airspace_height) - (($rw->end_y - $rw->begin_y) / $airspace_height*0.2))."+5);";
 		echo "t.fillText(
 			'".$rw->backward_name."',
-			w * ".(($rw->begin_x - $airspace_begin_x) / $airspace_width)." + 
-			w * ".(($runway_end_x - $rw->begin_x) / $airspace_width)." +10,
-			h * ".(($runway_begin_y - $airspace_begin_y) / $airspace_height)."+5);";
+			(w * ".(($rw->begin_x - $airspace_begin_x) / $airspace_width)." +
+			(w * ".(($rw->end_x - $rw->begin_x) / $airspace_width).")) +10,
+			(h * ".((($rw->end_y - $airspace_begin_y) / $airspace_height) + (($rw->end_y - $rw->begin_y) / $airspace_height*0.2)).")+5);";
 	}
 	?>
 }

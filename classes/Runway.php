@@ -33,6 +33,10 @@ class Runway {
 				return $this->start_point[0];
 			case "begin_y":
 				return $this->start_point[1];
+			case "end_x":
+				return $this->start_point[2];
+			case "end_y":
+				return $this->start_point[3];
 			default:
 				return $this->$property;
 		}
