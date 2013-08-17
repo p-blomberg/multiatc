@@ -28,9 +28,12 @@ function __autoload($class)
 /**
  * Klasser som behöver instantieras till en global.
  */
+
+/* No database needed yet
 $db=@new MySQLi($settings['db_host'], $settings['db_user'], $settings['db_password'], $settings['db_name']);
 if($db->connect_error) {
 	throw new Exception("Unable to connect to database (".$db->connect_error.")");
 }
 $db->set_charset("utf8");
 $db->autocommit(false);
+*/
