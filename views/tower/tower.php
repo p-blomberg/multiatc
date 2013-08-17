@@ -7,9 +7,9 @@ var last_main = null;
 
 function resize() {
 	_w = w; _h = h;
-	console.info("Resize from (" + _w + ", " + _h + ") to ("  + w + ", " + h + ")");
 	w = window.innerWidth;
 	h = window.innerHeight;
+	console.info("Resize from (" + _w + ", " + _h + ") to ("  + w + ", " + h + ")");
 	t_canvas.width = w;
 	t_canvas.height = h;
 }
