@@ -71,6 +71,7 @@ function draw_runways() {
 			h * ".(($rw->end_y - $airspace_begin_y) / $airspace_height).");";
 		echo "t.stroke();";
 
+		echo 't.textBaseline = "bottom";';
 		echo "t.fillText(
 			'".$rw->forward_name."',
 			(w * ".(($rw->begin_x - $airspace_begin_x) / $airspace_width).") -t.measureText('".$rw->forward_name."').width-5,
