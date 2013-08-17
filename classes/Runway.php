@@ -18,17 +18,15 @@ class Runway {
 				if($name < 0) {
 					$name += 36;
 				}
-				if(strlen($this->forward_name) > 2) {
-					switch(substr($this->forward_name, 2, 1)) {
-						case 'L':
-							$name .= 'R';
-							break;
-						case 'R':
-							$name .= 'L';
-							break;
-						case 'C':
-							$name .= 'C';
-					}
+				switch(substr($this->forward_name, -1)) {
+					case 'L':
+						$name .= 'R';
+						break;
+					case 'R':
+						$name .= 'L';
+						break;
+					case 'C':
+						$name .= 'C';
 				}
 				return $name;
 			case "begin_x":
