@@ -27,18 +27,13 @@ function main() {
 	dt = now - last_main;
 	last_main = now;
 
-	console.info(dt);
+	//console.info(dt);
 
 	t.fillStyle="#000022";
 	t.fillRect(0,0,w,h);
 	t.fillStyle="#FF0033";
-	//t.fillRect(w*0.1,h*0.1,w*0.8,h*0.8);
 
 	t.font = "bold 12px sans-serif";
-	/*
-	t.fillText("x", 248, 43);
-	t.fillText("y", 58, 165);
-	*/
 
 	runways();
 }
