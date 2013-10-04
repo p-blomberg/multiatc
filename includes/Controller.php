@@ -49,6 +49,11 @@ class Controller {
 		return $this->body;
 	}
 
+	public function json_output() {
+		header('Content-type: application/json');
+		return $this->raw_output();
+	}
+
 	public function html_output() {
 		$this->http_headers();
 		$data['title'] = $this->title();

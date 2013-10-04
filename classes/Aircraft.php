@@ -1,5 +1,5 @@
 <?php
-class Aircraft {
+class Aircraft implements JsonSerializable {
 	private $flightno;
 	private $model;
 	private $location;
@@ -12,6 +12,17 @@ class Aircraft {
 			default:
 				return $this->$property;
 		}
+	}
+
+	public function jsonSerialize() {
+		return array(
+			"flightno" => $this->flightno,
+			"model" => $this->model,
+			"location" => $this->location,
+			"altitude" => $this->altitude,
+			"heading" => $this->heading,
+			"speed" => $this->speed,
+		);
 	}
 
 	public function __construct($flightno, $model, $location, $altitude, $heading, $speed) {

@@ -3,7 +3,9 @@
 var t_canvas=document.getElementById("tower");
 var t=t_canvas.getContext("2d");
 var w=100, h=100;
-var last_main = null;
+var last_draw = null;
+var last_update = null;
+var aircraft = [];
 
 function resize() {
 	_w = w; _h = h;
@@ -17,26 +19,62 @@ function resize() {
 resize();
 
 Event.observe(window, 'resize', resize);
-window.setInterval(main, 100);
+Event.observe(window, 'load', function(e) {
+	// Things to do when everything is loaded
+	window.setInterval(draw, 100);
+	window.setInterval(request_update, 500);
+	request_update();
+});
 
-function main() {
-	if(last_main == null) {
-		last_main = new Date().getTime();
+function draw() {
+	if(last_draw == null) {
+		last_draw = new Date().getTime();
 	}
 	now = new Date().getTime();
-	dt = now - last_main;
-	last_main = now;
+	dt = now - last_draw;
+	last_draw = now;
 
-	//console.info(dt);
+	var fps = Math.floor(1000 / dt);
 
 	t.fillStyle="#000022";
 	t.fillRect(0,0,w,h);
 	t.fillStyle="#FF0033";
 
+	t.font = "normal 8px sans-serif";
+	t.fillStyle="#FFF";
+	t.fillText("Draw: "+fps+" fps", 0, 3);
+	if(last_update == null) {
+		var upd = "never";
+	} else {
+		var upd = ((new Date().getTime() - last_update)/1000).toString() + " seconds ago";
+	}
+	t.fillText("Last update: "+upd, 0, 13);
+
 	t.font = "bold 12px sans-serif";
 
 	draw_runways();
-	draw_aircraft();
+	draw_aircraft(aircraft);
+}
+
+function request_update() {
+	new Ajax.Request("/TowerUpdate", { onSuccess: process_update, onFailure: function(response) {
+		console.warning("Update request failed: "+response.status);
+	}});
+}
+
+function process_update(transport) {
+	var data = transport.responseJSON;
+	aircraft = data.aircraft;
+	last_update = new Date().getTime();
+}
+
+function aircraft(flightno, model, location, altitude, heading, speed) {
+	this.flightno = flightno;
+	this.model = model;
+	this.location = location;
+	this.altitude = altitude;
+	this.heading = heading;
+	this.speed = speed;
 }
 
 function draw_runways() {
@@ -85,35 +123,32 @@ function draw_runways() {
 	?>
 }
 
-function draw_aircraft() {
+function draw_aircraft(aircraft) {
+	console.info("Begin draw_aircraft for "+aircraft.length+" aircraft");
 	t.fillStyle="#FFF";
 	t.strokeStyle="#FFF";
 	t.font = "normal 10px sans-serif";
 
-	<?php
-	$airspace_begin_x = -88.2;
-	$airspace_begin_y = 42.1;
-	$airspace_end_x = -87.6;
-	$airspace_end_y = 41.8;
-	$airspace_width = $airspace_end_x - $airspace_begin_x;
-	$airspace_height = $airspace_end_y - $airspace_begin_y;
+	var airspace_begin_x = -88.2;
+	var airspace_begin_y = 42.1;
+	var airspace_end_x = -87.6;
+	var airspace_end_y = 41.8;
+	var airspace_width = airspace_end_x - airspace_begin_x;
+	var airspace_height = airspace_end_y - airspace_begin_y;
 
-	$b747 = new AircraftModel();
-	$aircraft = array(
-		new Aircraft("SAS123", $b747, array(-88.1, 41.969), 4000, 90, 180),
-		new Aircraft("BA345", $b747, array(-87.85, 41.984), 2000, 270, 160),
-	);
-	foreach($aircraft as $a) {
-		echo "t.fillRect(
-			(w * ".(($a->location[0] - $airspace_begin_x) / $airspace_width).")-2,
-			(h * ".(($a->location[1] - $airspace_begin_y) / $airspace_height).")-2,
-			5, 5);";
-		echo 't.textBaseline = "top";';
-		echo "t.fillText(
-			'".$a->flightno."',
-			(w * ".(($a->location[0] - $airspace_begin_x) / $airspace_width)."-t.measureText('".$a->flightno."').width/2),
-			(h * ".(($a->location[1] - $airspace_begin_y) / $airspace_height).")-20);";
-	}
-	?>
+	aircraft.each(function(a) {
+		t.fillRect(
+			(w * ((a.location[0] - airspace_begin_x) / airspace_width))-2,
+			(h * ((a.location[1] - airspace_begin_y) / airspace_height))-2,
+			5,
+			5
+		);
+		t.textBaseline = "top";
+		t.fillText(
+			a.flightno,
+			(w * ((a.location[0] - airspace_begin_x) / airspace_width) - t.measureText(a.flightno).width/2),
+			(h * ((a.location[1] - airspace_begin_y) / airspace_height)) - 20
+		);
+	});
 }
 </script> 
