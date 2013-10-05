@@ -16,7 +16,12 @@ $path_view = $repo_root."views/";
 $settings['app_name']="Okänt projekt";
 
 // Database
+/* Nope!
 $settings['db_host']="127.0.0.1";
 $settings['db_user']="user_not_set";
 $settings['db_password']="password_not_set";
 $settings['db_name']="dbname_not_set";
+*/
+
+// Redis
+$settings['redis_host'] = "127.0.0.1";

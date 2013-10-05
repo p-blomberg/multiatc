@@ -6,14 +6,6 @@ ob_start();
 // Init the session
 session_start();
 
-// Sätt den globala $repo_root till sökvägen till svn-repots root-mapp.
-if(file_exists('classes'))
-	$repo_root = '';
-else if(file_exists('../classes'))
-	$repo_root = '..';
-else if(file_exists('../../classes'))
-	$repo_root = '../..';
-
 /**
  * Automatiskt anropad av php on-demand för att include:a filer med klassdefinitioner.
  * Antar att den globala variabeln $repo_root innehåller sökvägen till svn-repots root-mapp.
@@ -37,3 +29,7 @@ if($db->connect_error) {
 $db->set_charset("utf8");
 $db->autocommit(false);
 */
+
+// Connect to Redis
+$redis = new Redis;
+$redis->connect($settings['redis_host']);
