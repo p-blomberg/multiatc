@@ -52,8 +52,13 @@ class Aircraft implements JsonSerializable {
 			->exec();
 	}
 
-	public function tick() {
-		// FIXME
-		$this->location[0] += 0.001;
+	public function tick($dt) {
+		/* 1 tick = $dt = 1 sekund = 1/60 minut
+		 * 1 knop = 1 nm per timme = 1/60 nm per minut
+		 */
+		$nm = 1/60/60;
+		$nm_per_tick = $this->speed * $nm / 60 * $dt;
+		$this->location[0] += $nm_per_tick * sin(deg2rad($this->heading));
+		$this->location[1] += $nm_per_tick * cos(deg2rad($this->heading));
 	}
 }

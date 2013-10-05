@@ -19,7 +19,7 @@ if($redis->get("game_state") === null || array_key_exists('r',$options)) {
 		->hset('aircraft:SAS123', 'location_x', -88.1)
 		->hset('aircraft:SAS123', 'location_y', 41.969)
 		->hset('aircraft:SAS123', 'altitude', 4000)
-		->hset('aircraft:SAS123', 'heading', 90)
+		->hset('aircraft:SAS123', 'heading', 75)
 		->hset('aircraft:SAS123', 'speed', 180)
 		->sadd('aircraft_flying', 'SAS123')
 		->exec();
@@ -29,11 +29,16 @@ if($redis->get("game_state") === null || array_key_exists('r',$options)) {
 	echo "Picking up where we left off...\n";
 }
 
+$last_tick = microtime(true);
 while(true) {
+	$this_tick = microtime(true);
+	$dt = $this_tick - $last_tick;
+	$last_tick = $this_tick;
+
 	$flying = $redis->smembers('aircraft_flying');
 	foreach($flying as $flightno) {
 		$aircraft = Aircraft::from_redis($flightno);
-		$aircraft->tick();
+		$aircraft->tick($dt);
 		$aircraft->to_redis();
 	}
 
