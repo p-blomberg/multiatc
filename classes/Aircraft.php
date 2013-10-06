@@ -179,4 +179,29 @@ class Aircraft implements JsonSerializable {
 		}
 		return $response;
 	}
+
+	public static function random_flight() {
+		$flightno = self::random_flightno();
+		$model = "B747";
+		$x = -88.2;
+		$random = mt_rand(0, mt_getrandmax()-1) / mt_getrandmax();
+		$y = 41.8 + ($random * (42.1-41.8));
+		$location = array($x, $y);
+		$altitude = mt_rand(2000,18000);
+		$target_altitude = floor($altitude/1000)*1000;
+		$heading = mt_rand(30,150);
+		$target_heading = $heading; // FIXME: head towards the airport!
+		$speed = mt_rand(170,400);
+		$target_speed = $speed;
+		return new Aircraft($flightno, $model, $location, $altitude, $target_altitude, $heading, $target_heading, $speed, $target_speed);
+	}
+
+	private static function random_airline() {
+		$airlines = array("AA","SAS","BA");
+		return $airlines[mt_rand(0,count($airlines)-1)];
+	}
+	private static function random_flightno() {
+		// FIXME: check if flight number is taken
+		return self::random_airline().mt_rand(100,999);
+	}
 }
