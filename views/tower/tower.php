@@ -86,7 +86,7 @@ function draw_runways() {
 	t.font = "normal 10px sans-serif";
 	
 	<?php
-	$ord = new Airport(array(41.979492, -87.905597), 30*1852);
+	$ord = Airport::from_redis('ORD');
 	$ord->add_runway(new Runway("10", "093", array(-87.9315, 41.969, -87.8837, 41.969), 13001));
 	$ord->add_runway(new Runway("14L", "143", array(-87.91533, 42.0025, -87.891667, 41.981333), 10005));
 	$ord->add_runway(new Runway("14R", "143", array(-87.933167, 41.9905, -87.910167, 41.97), 9685));

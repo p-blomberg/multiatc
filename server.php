@@ -9,9 +9,13 @@ if($redis->get("game_state") === null || array_key_exists('r',$options)) {
 	// Clean up redis, just to be sure
 	$redis->delete('aircraft');
 	$redis->delete('aircraft_flying');
+	$redis->delete('airport');
 
 	// Start a new game
 	$redis->set("game_state", "running");
+
+	// Create airports
+	Airport::spawn();
 
 	// Create some aircraft (should probably happen when clients choose their airspaces)
 	$a = Aircraft::random_flight();

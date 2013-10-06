@@ -9,6 +9,7 @@ class Aircraft implements JsonSerializable {
 	private $target_heading;
 	private $speed;
 	private $target_speed;
+	private $destination;
 	private $fields;
 
 	public function __get($property) {
@@ -133,6 +134,20 @@ class Aircraft implements JsonSerializable {
 		$this->target_heading = $heading;
 	}
 
+	private function turn_towards_airport($iata_code) {
+		$airport = Airport::from_redis($iata_code);
+		if(empty($airport)) {
+			throw new Exception("No such airport");
+		}
+		$this->turn_towards_point($airport->location[0], $airport->location[1]);
+	}
+
+	private function turn_towards_point($x, $y) {
+		$delta_x = $x - $this->location[0];
+		$delta_y = $y - $this->location[1];
+		$angle = 90 - rad2deg(atan($delta_y/$delta_x));
+		$this->set_target_heading($angle);
+	}
 
 	public function chat_response($cmd) {
 		$response = array(
@@ -190,10 +205,12 @@ class Aircraft implements JsonSerializable {
 		$altitude = mt_rand(2000,18000);
 		$target_altitude = floor($altitude/1000)*1000;
 		$heading = mt_rand(30,150);
-		$target_heading = $heading; // FIXME: head towards the airport!
+		$target_heading = $heading;
 		$speed = mt_rand(170,400);
 		$target_speed = $speed;
-		return new Aircraft($flightno, $model, $location, $altitude, $target_altitude, $heading, $target_heading, $speed, $target_speed);
+		$a = new Aircraft($flightno, $model, $location, $altitude, $target_altitude, $heading, $target_heading, $speed, $target_speed);
+		$a->turn_towards_airport("ORD");
+		return $a;
 	}
 
 	private static function random_airline() {
