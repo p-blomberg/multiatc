@@ -68,14 +68,16 @@ function process_update(transport) {
 	last_update = new Date().getTime();
 }
 
-function aircraft(flightno, model, location, altitude, target_altitude, heading, speed) {
+function aircraft(flightno, model, location, altitude, target_altitude, heading, target_heading, speed, target_speed) {
 	this.flightno = flightno;
 	this.model = model;
 	this.location = location;
 	this.altitude = altitude;
 	this.target_altitude = target_altitude;
 	this.heading = heading;
+	this.target_heading = target_heading;
 	this.speed = speed;
+	this.target_speed = target_speed;
 }
 
 function draw_runways() {
