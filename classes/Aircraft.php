@@ -201,7 +201,13 @@ class Aircraft implements JsonSerializable {
 		return $airlines[mt_rand(0,count($airlines)-1)];
 	}
 	private static function random_flightno() {
-		// FIXME: check if flight number is taken
-		return self::random_airline().mt_rand(100,999);
+		$airline = self::random_airline();
+		while(true) {
+			$number = mt_rand(100,999);
+			if(Aircraft::from_redis($airline.$number) == null) {
+				break;
+			}
+		}
+		return $airline.$number;
 	}
 }
