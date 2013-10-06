@@ -144,11 +144,26 @@ function draw_aircraft(aircraft) {
 			5,
 			5
 		);
-		t.textBaseline = "top";
+		t.textBaseline = "bottom";
 		t.fillText(
 			a.flightno,
 			(w * ((a.location[0] - airspace_begin_x) / airspace_width) - t.measureText(a.flightno).width/2),
-			(h * ((a.location[1] - airspace_begin_y) / airspace_height)) - 20
+			(h * ((a.location[1] - airspace_begin_y) / airspace_height)) - 7
+		);
+		text = parseInt(a.altitude)+' ';
+		if(parseInt(a.altitude) < parseInt(a.target_altitude)) {
+			text += String.fromCharCode(parseInt('0x2191'));
+		} else if(parseInt(a.altitude) > parseInt(a.target_altitude)) {
+			text += String.fromCharCode(parseInt('0x2193'));
+		} else {
+			text += '=';
+		}
+		text += ' '+parseInt(a.speed);
+		t.textBaseline = "top";
+		t.fillText(
+			text,
+			(w * ((a.location[0] - airspace_begin_x) / airspace_width) - t.measureText(text).width/2),
+			(h * ((a.location[1] - airspace_begin_y) / airspace_height)) + 8
 		);
 	});
 }
