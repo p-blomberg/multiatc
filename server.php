@@ -14,18 +14,10 @@ if($redis->get("game_state") === null || array_key_exists('r',$options)) {
 	$redis->set("game_state", "running");
 
 	// Create some aircraft (should probably happen when clients choose their airspaces)
-	$redis->multi()
-		->hset('aircraft:SAS123', 'model', 'Boeing 747')
-		->hset('aircraft:SAS123', 'location_x', -88.1)
-		->hset('aircraft:SAS123', 'location_y', 41.969)
-		->hset('aircraft:SAS123', 'altitude', 4000)
-		->hset('aircraft:SAS123', 'target_altitude', 4000)
-		->hset('aircraft:SAS123', 'heading', 0)
-		->hset('aircraft:SAS123', 'target_heading', 90)
-		->hset('aircraft:SAS123', 'speed', 180)
-		->hset('aircraft:SAS123', 'target_speed', 180)
-		->sadd('aircraft_flying', 'SAS123')
-		->exec();
+	$a = Aircraft::random_flight();
+	$a->to_redis();
+	$redis->sadd('aircraft_flying', $a->flightno);
+	echo $a->flightno." spawned in (".$a->location[0].','.$a->location[1].")\n";
 
 	echo "Server started.\n";
 } else {
