@@ -36,6 +36,9 @@ class Aircraft implements JsonSerializable {
 	public static function from_redis($flightno) {
 		global $redis;
 		$data = $redis->hgetall('aircraft:'.$flightno);
+		if($data == null) {
+			return null;
+		}
 		$location = array($data['location_x'], $data['location_y']);
 		return new Aircraft($flightno, $data['model'], $location, $data['altitude'], $data['heading'], $data['speed']);
 	}
