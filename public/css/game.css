@@ -5,3 +5,29 @@ html, body, #wrapper {
 	padding: 0;
   overflow: hidden;
 }
+
+#history_div {
+	position: absolute;
+	top: 0;
+	bottom: 3ex;
+	width: 100%;
+	overflow: auto;
+}
+#history_div ul, #history_div li {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	padding-left: 5px;
+	font-size: 10pt;
+}
+#input_div {
+	position: absolute;
+	bottom: 0;
+	height: 3ex;
+	width: 100%;
+}
+#input_div input {
+	width: 100%;
+	padding-left: 5px;
+	font-size: 10pt;
+}
