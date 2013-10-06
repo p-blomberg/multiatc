@@ -29,6 +29,8 @@ function send_command(command) {
 	});
 	$('history_div').scrollTop = $('history_div').scrollHeight;
 	new Ajax.Request("/PilotChat/send", { 
+		method: 'post',
+		parameters: { command: command },
 		onSuccess: function(response) {
 			$('history_ul').insert({ bottom: response.responseText });
 			$('history_div').scrollTop = $('history_div').scrollHeight;

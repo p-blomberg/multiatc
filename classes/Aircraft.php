@@ -4,6 +4,7 @@ class Aircraft implements JsonSerializable {
 	private $model;
 	private $location;
 	private $altitude;
+	private $target_altitude;
 	private $heading;
 	private $speed;
 	private $fields;
@@ -63,5 +64,39 @@ class Aircraft implements JsonSerializable {
 		$nm_per_tick = $this->speed * $nm / 60 * $dt;
 		$this->location[0] += $nm_per_tick * sin(deg2rad($this->heading));
 		$this->location[1] += $nm_per_tick * cos(deg2rad($this->heading));
+	}
+
+	private function set_target_altitude($altitude) {
+		if(!is_numeric($altitude) || $altitude > 50 || $altitude < 1) {
+			throw new Exception("Bad altitude");
+		}
+		$this->target_altitude = $altitude * 1000;
+	}
+
+	public function chat_response($cmd) {
+		$response = array(
+			'class' => 'error',
+			'msg' => 'message not set',
+		);
+		try {
+			switch($cmd[0]) {
+				case "a":
+					$this->set_target_altitude($cmd[1]);
+					if($this->altitude < $this->target_altitude) {
+						$response['msg'] = "Will climb to ".$this->target_altitude." feet";
+					} elseif($this->altitude > $this->target_altitude) {
+						$response['msg'] = "Will descend to ".$this->target_altitude." feet";
+					} else {
+						$response['msg'] = "Will maintain ".$this->target_altitude." feet";
+					}
+					$response['class'] = "ok";
+					break;
+				default:
+					throw new Exception("Unknown command");
+			}
+		} catch(Exception $e) {
+			$response['msg'] = "Unable: ".$e->getMessage();
+		}
+		return $response;
 	}
 }

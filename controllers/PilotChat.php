@@ -9,7 +9,12 @@ class pilotChatController extends Controller {
 	}
 	public function send() {
 		$this->raw_response = true;
-		$this->body = "<li>Hej!</li>";
+		$cmd = post_get("command");
+		if(empty($cmd)) {
+			throw new HTTPError500();
+		}
+		$response = $this->parse($cmd);
+		$this->body = "<li class=\"{$response['class']}\">{$response['msg']}</li>";
 	}
 	public function output() {
 		if($this->raw_response) {
@@ -21,5 +26,31 @@ class pilotChatController extends Controller {
 
 	public function html_head_extras() {
 		return '<link rel="stylesheet" href="/css/game.css">';
+	}
+
+	private function parse($cmd) {
+		$words = explode(' ', $cmd);
+		$response = array('class' => '', 'msg' => 'Message not set');
+
+		$first = array_shift($words);
+		switch($first) {
+			case "help":
+				$response['msg'] = $this->helpmsg();
+				break;
+			default:
+				$a = Aircraft::from_redis(strtoupper($first));
+				if(empty($a)) {
+					$response['class']='error';
+					$response['msg']="Aircraft {$first} not found";
+					break;
+				}
+				$response = $a->chat_response($words);
+				break;
+		}
+		return $response;
+	}
+
+	private function helpmsg() {
+		return $this->view('/pilotchat/help.php');
 	}
 }
