@@ -19,6 +19,7 @@ if($redis->get("game_state") === null || array_key_exists('r',$options)) {
 		->hset('aircraft:SAS123', 'location_x', -88.1)
 		->hset('aircraft:SAS123', 'location_y', 41.969)
 		->hset('aircraft:SAS123', 'altitude', 4000)
+		->hset('aircraft:SAS123', 'target_altitude', 4000)
 		->hset('aircraft:SAS123', 'heading', 75)
 		->hset('aircraft:SAS123', 'speed', 180)
 		->sadd('aircraft_flying', 'SAS123')

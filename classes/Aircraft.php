@@ -22,13 +22,14 @@ class Aircraft implements JsonSerializable {
 			"model" => $this->model,
 			"location" => $this->location,
 			"altitude" => $this->altitude,
+			"target_altitude" => $this->target_altitude,
 			"heading" => $this->heading,
 			"speed" => $this->speed,
 		);
 	}
 
-	public function __construct($flightno, $model, $location, $altitude, $heading, $speed) {
-		$this->fields = array('flightno','model','location','altitude','heading','speed');
+	public function __construct($flightno, $model, $location, $altitude, $target_altitude, $heading, $speed) {
+		$this->fields = array('flightno','model','location','altitude','target_altitude','heading','speed');
 		foreach($this->fields as $f) {
 			$this->$f = $$f;
 		}
@@ -41,7 +42,7 @@ class Aircraft implements JsonSerializable {
 			return null;
 		}
 		$location = array($data['location_x'], $data['location_y']);
-		return new Aircraft($flightno, $data['model'], $location, $data['altitude'], $data['heading'], $data['speed']);
+		return new Aircraft($flightno, $data['model'], $location, $data['altitude'], $data['target_altitude'], $data['heading'], $data['speed']);
 	}
 
 	public function to_redis() {
@@ -51,6 +52,7 @@ class Aircraft implements JsonSerializable {
 			->hset('aircraft:'.$this->flightno, 'location_x', $this->location[0])
 			->hset('aircraft:'.$this->flightno, 'location_y', $this->location[1])
 			->hset('aircraft:'.$this->flightno, 'altitude', $this->altitude)
+			->hset('aircraft:'.$this->flightno, 'target_altitude', $this->target_altitude)
 			->hset('aircraft:'.$this->flightno, 'heading', $this->heading)
 			->hset('aircraft:'.$this->flightno, 'speed', $this->speed)
 			->exec();
@@ -64,6 +66,16 @@ class Aircraft implements JsonSerializable {
 		$nm_per_tick = $this->speed * $nm / 60 * $dt;
 		$this->location[0] += $nm_per_tick * sin(deg2rad($this->heading));
 		$this->location[1] += $nm_per_tick * cos(deg2rad($this->heading));
+
+		$max_fps = 2500/60; // feet, not frames
+		if($this->target_altitude != $this->altitude) {
+			$diff = $this->target_altitude - $this->altitude;
+			if($diff > 0) {
+				$this->altitude += min($max_fps, $diff);
+			} else {
+				$this->altitude += max(-$max_fps, $diff);
+			}
+		}
 	}
 
 	private function set_target_altitude($altitude) {
@@ -82,6 +94,7 @@ class Aircraft implements JsonSerializable {
 			switch($cmd[0]) {
 				case "a":
 					$this->set_target_altitude($cmd[1]);
+					$this->to_redis();
 					if($this->altitude < $this->target_altitude) {
 						$response['msg'] = "Will climb to ".$this->target_altitude." feet";
 					} elseif($this->altitude > $this->target_altitude) {

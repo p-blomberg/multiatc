@@ -68,11 +68,12 @@ function process_update(transport) {
 	last_update = new Date().getTime();
 }
 
-function aircraft(flightno, model, location, altitude, heading, speed) {
+function aircraft(flightno, model, location, altitude, target_altitude, heading, speed) {
 	this.flightno = flightno;
 	this.model = model;
 	this.location = location;
 	this.altitude = altitude;
+	this.target_altitude = target_altitude;
 	this.heading = heading;
 	this.speed = speed;
 }
