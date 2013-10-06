@@ -28,12 +28,12 @@ function send_command(command) {
 		bottom: "<li>&gt; " + command + "</li>"
 	});
 	$('history_div').scrollTop = $('history_div').scrollHeight;
-	new Ajax.Request("/PilotChat/send", { onSuccess: function(response) {
-			$('history_ul').insert({
-				bottom: response.responseText
-			});
+	new Ajax.Request("/PilotChat/send", { 
+		onSuccess: function(response) {
+			$('history_ul').insert({ bottom: response.responseText });
 			$('history_div').scrollTop = $('history_div').scrollHeight;
-		}, onFailure: function(response) {
+		}, 
+		onFailure: function(response) {
 			console.warning("Send command failed: "+response.status);
 		}
 	});
