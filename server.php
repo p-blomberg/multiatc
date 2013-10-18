@@ -9,9 +9,7 @@ mt_srand(time());
 
 if($redis->get("game_state") === null || array_key_exists('r',$options)) {
 	// Clean up redis, just to be sure
-	$redis->delete('aircraft');
-	$redis->delete('aircraft_flying');
-	$redis->delete('airport');
+	$redis->flushall();
 
 	// Start a new game
 	$redis->set("game_state", "running");
