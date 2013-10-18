@@ -51,6 +51,7 @@ class pilotChatController extends Controller {
 	}
 
 	private function helpmsg() {
+		// @todo: "Kopiera lite crap från task (nitroxy) bara"
 		return $this->view('/pilotchat/help.php');
 	}
 }
