@@ -5,6 +5,8 @@ ob_end_flush();
 
 $options=getopt('r');
 
+mt_srand(time());
+
 if($redis->get("game_state") === null || array_key_exists('r',$options)) {
 	// Clean up redis, just to be sure
 	$redis->delete('aircraft');
